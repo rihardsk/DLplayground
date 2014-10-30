@@ -43,18 +43,12 @@ b2grad = zeros(size(b2));
 
 m = size(data)(2);
 warning off Octave:broadcast;
-z2 = data' * W1' + b1';
-a2 = sigmoid(z2);
-z3 = a2 * W2' + b2';
+a2 = sigmoid(data' * W1' + b1');
+a3 = sigmoid(a2 * W2' + b2');
 warning on Octave:broadcast;
-a3 = sigmoid(z3);
 dif = a3 - data';
 cost = 0;
-%{
-for i = 1:m
-	cost = cost + dif(i, :) * dif(i, :)';
-end
-%}
+
 cost = sum((dif .^ 2)(:));
 aavg = mean(a2);
 
@@ -68,27 +62,12 @@ d2 = (d3 * W2 + beta * (-sparsityParam./aavg + (1 - sparsityParam)./(1 - aavg)))
 %     ---^---   ------------------^----------------------------------------         ------^---------
 % no lambda param.      no sparsity ierobežojuma                                    funkcijas atvas.
 warning error Octave:broadcast;
-DeltaW1 = zeros(size(W1));
-DeltaW2 = zeros(size(W2));
 
-%{
-for i = 1:m
-	DeltaW2 = DeltaW2 + d3(i, :)' * a2(i, :);
-	DeltaW1 = DeltaW1 + d2(i, :)' * data'(i, :);
-end
-%}
-DeltaW2 = d3' * a2;
-DeltaW1 = d2' * data';
+W2Grad = d3' * a2 / m + lambda * W2;
+W1Grad = d2' * data' / m + lambda * W1;
 
-Deltab2 = sum(d3)';
-Deltab1 = sum(d2)';
-
-
-W2grad = DeltaW2 / m + lambda * W2;
-W1grad = DeltaW1 / m + lambda * W1;
-b2grad = Deltab2 / m;
-b1grad = Deltab1 / m;
-
+b2grad = sum(d3)' / m;
+b1grad = sum(d2)' / m;
 
 %-------------------------------------------------------------------
 % After computing the cost and gradient, we will convert the gradients back

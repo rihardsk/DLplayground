@@ -28,6 +28,10 @@ sparsityParam = 0.1;   % desired average activation of the hidden units.
 lambda = 3e-3;         % weight decay parameter       
 beta = 3;              % weight of sparsity penalty term       
 
+TRAIN1 = false;
+TRAIN2 = false;
+TRAIN3 = false;
+TRAIN4 = false;
 %%======================================================================
 %% STEP 1: Load data from the MNIST database
 %
@@ -57,7 +61,6 @@ sae1Theta = initializeParameters(hiddenSizeL1, inputSize);
 %                You should store the optimal parameters in sae1OptTheta
 
 
-TRAIN1 = true;
 
 %  Use minFunc to minimize the function
 %
@@ -85,7 +88,7 @@ else
 end
 
 fprintf('Done training/loading AE 1\nPress any key to continue...\n');
-pause();
+%pause();
 
 
 
@@ -118,7 +121,6 @@ sae2Theta = initializeParameters(hiddenSizeL2, hiddenSizeL1);
 %                You should store the optimal parameters in sae2OptTheta
 
 
-TRAIN2 = true;
 
 if TRAIN2
 	tic;
@@ -135,7 +137,7 @@ else
 end
 
 fprintf('Done training/loading AE 2\nPress any key to continue...\n');
-pause();
+%pause();
 
 
 
@@ -171,7 +173,6 @@ saeSoftmaxTheta = 0.005 * randn(hiddenSizeL2 * numClasses, 1);
 %        set saeSoftmaxOptTheta = softmaxModel.optTheta(:);
 
 
-TRAIN3 = true;
 if TRAIN3
   softoptions.maxIter = 100;
   softmaxModel = softmaxTrain(hiddenSizeL2, numClasses, lambda, ...
@@ -186,7 +187,7 @@ else
 end
 
 fprintf('Done training/loading softmax (end) laer\nPress any key to continue...\n');
-pause();
+%pause();
 % -------------------------------------------------------------------------
 
 
@@ -219,7 +220,6 @@ stackedAETheta = [ saeSoftmaxOptTheta ; stackparams ];
 
 
 
-TRAIN4 = true;
 
 if TRAIN4
 	tic;
@@ -235,7 +235,7 @@ else
 end
 
 fprintf('Done training/loading\nPress any key to continue...\n');
-pause();
+%pause();
 
 
 

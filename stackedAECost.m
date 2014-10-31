@@ -109,6 +109,7 @@ end
 %% Roll gradient vector
 grad = [softmaxThetaGrad(:) ; stack2params(stackgrad)];
 
+fflush(stdout);
 end
 
 

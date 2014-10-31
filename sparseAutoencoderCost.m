@@ -45,7 +45,7 @@ m = size(data)(2);
 warning off Octave:broadcast;
 a2 = sigmoid(data' * W1' + b1');
 a3 = sigmoid(a2 * W2' + b2');
-warning on Octave:broadcast;
+%warning on Octave:broadcast;
 dif = a3 - data';
 cost = 0;
 
@@ -61,7 +61,7 @@ d3 = dif .* (a3 .* (1 - a3)); %  * -1
 d2 = (d3 * W2 + beta * (-sparsityParam./aavg + (1 - sparsityParam)./(1 - aavg))) .* (a2 .* (1 - a2));
 %     ---^---   ------------------^----------------------------------------         ------^---------
 % no lambda param.      no sparsity ierobežojuma                                    funkcijas atvas.
-warning error Octave:broadcast;
+%warning error Octave:broadcast;
 
 W2Grad = d3' * a2 / m + lambda * W2;
 W1Grad = d2' * data' / m + lambda * W1;

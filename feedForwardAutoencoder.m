@@ -19,7 +19,7 @@ b1 = theta(2*hiddenSize*visibleSize+1:2*hiddenSize*visibleSize+hiddenSize);
 
 m = size(data, 2);
 
-activation = sigmoid(data' * W1' + repmat(b1', m, 1));
+activation = sigmoid(data' * W1' + repmat(b1', m, 1))';
 
 end
 

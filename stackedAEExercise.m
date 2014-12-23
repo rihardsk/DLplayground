@@ -28,7 +28,7 @@ sparsityParam = 0.1;   % desired average activation of the hidden units.
 lambda = 3e-3;         % weight decay parameter       
 beta = 3;              % weight of sparsity penalty term       
 
-maxIter = 100;
+maxIter = 400;
 TRAIN1 = true;
 TRAIN2 = true;
 TRAIN3 = true;

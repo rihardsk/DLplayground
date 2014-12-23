@@ -1,4 +1,4 @@
-function [cost,grad] = sparseAutoencoderCost(theta, visibleSize, hiddenSize, ...
+function cost = sparseAutoencoderCostNoGrad(theta, visibleSize, hiddenSize, ...
                                              lambda, sparsityParam, beta, data)
 % visibleSize: the number of input units (probably 64) 
 % hiddenSize: the number of hidden units (probably 25) 
@@ -20,10 +20,6 @@ b2 = theta(2*hiddenSize*visibleSize+hiddenSize+1:end);
 % Cost and gradient variables (your code needs to compute these values). 
 % Here, we initialize them to zeros. 
 cost = 0;
-W1grad = zeros(size(W1)); 
-W2grad = zeros(size(W2));
-b1grad = zeros(size(b1)); 
-b2grad = zeros(size(b2));
 
 %% ---------- YOUR CODE HERE --------------------------------------
 %  Instructions: Compute the cost/optimization objective J_sparse(W,b) for the Sparse Autoencoder,
@@ -56,25 +52,6 @@ warning off Octave:broadcast;
 cost = (cost/m + lambda * (theta(1:2*hiddenSize*visibleSize)' * theta(1:2*hiddenSize*visibleSize)))/2 ...
 		+ beta * sum(kl(sparsityParam, aavg));
 
-% d2 = -dif .* sigmoidprim(z2); %it kā der tas, kas zemāk sigmoidprim vietā
-d3 = dif .* (a3 .* (1 - a3)); %  * -1
-d2 = (d3 * W2 + beta * (-sparsityParam./aavg + (1 - sparsityParam)./(1 - aavg))) .* (a2 .* (1 - a2));
-%     ---^---   ------------------^----------------------------------------         ------^---------
-% no lambda param.      no sparsity ierobežojuma                                    funkcijas atvas.
-%warning error Octave:broadcast;
-
-W2grad = d3' * a2 / m + lambda * W2;
-W1grad = d2' * data' / m + lambda * W1;
-
-b2grad = sum(d3)' / m;
-b1grad = sum(d2)' / m;
-
-%-------------------------------------------------------------------
-% After computing the cost and gradient, we will convert the gradients back
-% to a vector format (suitable for minFunc).  Specifically, we will unroll
-% your gradient matrices into a vector.
-
-grad = [W1grad(:) ; W2grad(:) ; b1grad(:) ; b2grad(:)];
 fflush(stdout);
 end
 

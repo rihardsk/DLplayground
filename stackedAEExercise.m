@@ -28,10 +28,11 @@ sparsityParam = 0.1;   % desired average activation of the hidden units.
 lambda = 3e-3;         % weight decay parameter       
 beta = 3;              % weight of sparsity penalty term       
 
-TRAIN1 = false;
-TRAIN2 = false;
-TRAIN3 = false;
-TRAIN4 = false;
+maxIter = 100;
+TRAIN1 = true;
+TRAIN2 = true;
+TRAIN3 = true;
+TRAIN4 = true;
 %%======================================================================
 %% STEP 1: Load data from the MNIST database
 %
@@ -70,7 +71,7 @@ options.Method = 'lbfgs'; % Here, we use L-BFGS to optimize our cost
                           % need a function pointer with two outputs: the
                           % function value and the gradient. In our problem,
                           % sparseAutoencoderCost.m satisfies this.
-options.maxIter = 400;	  % Maximum number of iterations of L-BFGS to run 
+options.maxIter = maxIter;	  % Maximum number of iterations of L-BFGS to run 
 options.display = 'on';
 
 if TRAIN1

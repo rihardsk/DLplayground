@@ -63,8 +63,8 @@ d2 = (d3 * W2 + beta * (-sparsityParam./aavg + (1 - sparsityParam)./(1 - aavg)))
 % no lambda param.      no sparsity ierobežojuma                                    funkcijas atvas.
 %warning error Octave:broadcast;
 
-W2Grad = d3' * a2 / m + lambda * W2;
-W1Grad = d2' * data' / m + lambda * W1;
+W2grad = d3' * a2 / m + lambda * W2;
+W1grad = d2' * data' / m + lambda * W1;
 
 b2grad = sum(d3)' / m;
 b1grad = sum(d2)' / m;

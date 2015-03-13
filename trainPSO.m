@@ -115,7 +115,7 @@ pause();
 
 %  Randomly initialize the parameters
 theta = initializeParameters(hiddenSize, visibleSize);
-
+numel(theta)
 %  Use minFunc to minimize the function
 %
 %
@@ -147,15 +147,39 @@ options = optimset('MaxIter', 400);
 toc;
 %}
 
+%{
 tic;
-[opttheta, cost] = pso( @(p) sparseAutoencoderCostNoGrad(p, ...
+[opttheta, cost] = rpso( @(p) sparseAutoencoderCostNoGrad(p, ...
                                    visibleSize, hiddenSize, ...
                                    lambda, sparsityParam, ...
                                    beta, patches), ...
                                [zeros(size(theta)) - 10, zeros(size(theta)) + 10], []);
 toc;
+%}
+%[opttheta2, opttheta]
 
-[opttheta2, opttheta]
+%{
+addpath '/home/rihards/Programming/octave/Machine Learning/SwarmOps/'
+%molparameters;
+psoparameters;
+maxEvaluations = 200000;
+data = struct( ...
+            'Dim', numel(theta), ...                            % Dimensionality of search-space.
+            'AcceptableFitness', 0.0001, ...         % Stop optimization if fitness is below this.
+            'MaxEvaluations', maxEvaluations, ...    % Max number of fitness evaluations to perform.
+            'LowerInit', zeros(size(theta))' - 1, ...          % Initialization lower-bound.
+            'UpperInit', zeros(size(theta))' + 1, ...              % Initialization upper-bound.
+            'LowerBound', zeros(size(theta))' - 10, ...     % Search-space lower-bound.
+            'UpperBound', zeros(size(theta))' + 10);            % Search-space upper-bound.
+
+[bestX, bestFitness, evaluations] = psoparallel(@(p) sparseAutoencoderCost(p, ...
+                                   visibleSize, hiddenSize, ...
+                                   lambda, sparsityParam, ...
+                                   beta, patches), ...
+                                   data, PSO_100DIM_200000EVALS);
+bestFitness
+evaluations
+%}
 pause();
 
 %%======================================================================
@@ -163,7 +187,7 @@ pause();
 
 
 
-W1 = reshape(opttheta(1:hiddenSize*visibleSize), hiddenSize, visibleSize);
+W1 = reshape(bestX(1:hiddenSize*visibleSize), hiddenSize, visibleSize);
 display_network(W1', 12); 
 
 print -djpeg weights.jpg   % save the visualization to a file 
